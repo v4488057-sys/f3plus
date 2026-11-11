@@ -1,10 +1,12 @@
 package dev.coldwilder.f3plus;
 
+import net.minecraft.client.font.TextRenderer;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public final class DebugTextStyle {
-    private static final String[] DROP = {
+    private static final String[] JUNK = {
         "SH: ",
         "CH: ",
         "SC: ",
@@ -12,7 +14,10 @@ public final class DebugTextStyle {
         "Shader: ",
         "Sound",
         "Debug charts:",
-        "For help:",
+        "For help:"
+    };
+
+    private static final String[] MOD_JUNK = {
         "Sodium",
         "[Sodium",
         "TS (No",
@@ -39,10 +44,68 @@ public final class DebugTextStyle {
         "Chunks[C]"
     };
 
+    private static final String[] COORDS = {
+        "XYZ:",
+        "Block:",
+        "Chunk:",
+        "Chunk-relative:",
+        "Block position:",
+        "Chunk section:",
+        "Facing:",
+        "Biome:",
+        "Client Light:",
+        "Local Difficulty:",
+        "Difficulty:",
+        "Targeted Block",
+        "Targeted Fluid",
+        "minecraft:"
+    };
+
+    private static final String[] CHUNKS = {
+        "C: ",
+        "Chunks:",
+        "Chunk Cache",
+        "Chunks[C]"
+    };
+
+    private static final String[] ENTITIES = {
+        "E: ",
+        "Entities:",
+        "Targeted Entity"
+    };
+
+    private static final String[] PARTICLES = {
+        "P: ",
+        "Particles:"
+    };
+
+    private static final String[] SYSTEM = {
+        "Java:",
+        "CPU:",
+        "Mem:",
+        "Allocation:",
+        "Allocated:",
+        "Display:",
+        "Graphics:",
+        "OpenGL",
+        "GL ",
+        "GPU",
+        "Driver",
+        "Vendor",
+        "LWJGL",
+        "OS:",
+        "Memory:"
+    };
+
     private DebugTextStyle() {
     }
 
-    public static void restyle(List<String> lines) {
+    public static void restyle(List<String> lines, TextRenderer renderer, int maxWidth) {
+        F3PlusConfig config = F3PlusConfig.get();
+        if (!config.enabled) {
+            return;
+        }
+
         List<String> result = new ArrayList<>(lines.size());
         boolean gap = false;
 
@@ -53,7 +116,7 @@ public final class DebugTextStyle {
             }
 
             String[] parts = entry.split("\n", -1);
-            if (dropped(clean(parts[0]))) {
+            if (dropped(clean(parts[0]), config)) {
                 continue;
             }
 
@@ -63,14 +126,14 @@ public final class DebugTextStyle {
                     gap = !result.isEmpty();
                     continue;
                 }
-                if (dropped(line)) {
+                if (dropped(line, config) || hidden(line, config)) {
                     continue;
                 }
                 if (gap) {
                     result.add("");
                     gap = false;
                 }
-                result.add(paint(line));
+                result.add(paint(trim(line, renderer, maxWidth)));
             }
         }
 
@@ -96,14 +159,61 @@ public final class DebugTextStyle {
         return out.toString();
     }
 
-    private static boolean dropped(String line) {
+    private static boolean dropped(String line, F3PlusConfig config) {
         String text = line.stripLeading();
-        for (String prefix : DROP) {
+        if (matches(text, JUNK)) {
+            return true;
+        }
+        return config.hideModLines && matches(text, MOD_JUNK);
+    }
+
+    private static boolean hidden(String line, F3PlusConfig config) {
+        String text = line.stripLeading();
+        if (isFpsLine(text)) {
+            return false;
+        }
+        if (!config.showCoordinates && matches(text, COORDS)) {
+            return true;
+        }
+        if (!config.showChunks && matches(text, CHUNKS)) {
+            return true;
+        }
+        if (!config.showEntities && matches(text, ENTITIES)) {
+            return true;
+        }
+        if (!config.showParticles && matches(text, PARTICLES)) {
+            return true;
+        }
+        return !config.showSystem && matches(text, SYSTEM);
+    }
+
+    private static boolean matches(String text, String[] prefixes) {
+        for (String prefix : prefixes) {
             if (text.startsWith(prefix)) {
                 return true;
             }
         }
         return false;
+    }
+
+    private static String trim(String line, TextRenderer renderer, int maxWidth) {
+        if (maxWidth <= 0 || renderer.getWidth(line) <= maxWidth) {
+            return line;
+        }
+
+        String suffix = "...";
+        int suffixWidth = renderer.getWidth(suffix);
+        int low = 0;
+        int high = line.length();
+        while (low < high) {
+            int mid = (low + high + 1) >>> 1;
+            if (renderer.getWidth(line.substring(0, mid)) + suffixWidth <= maxWidth) {
+                low = mid;
+            } else {
+                high = mid - 1;
+            }
+        }
+        return line.substring(0, low).stripTrailing() + suffix;
     }
 
     private static String paint(String line) {

@@ -1,6 +1,8 @@
 package dev.coldwilder.f3plus.mixin;
 
 import dev.coldwilder.f3plus.DebugTextStyle;
+import dev.coldwilder.f3plus.F3PlusConfig;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.DebugHud;
@@ -19,7 +21,10 @@ public abstract class DebugHudMixin {
         at = @At("HEAD")
     )
     private void f3plus$restyle(DrawContext context, List<String> lines, boolean left, CallbackInfo ci) {
-        DebugTextStyle.restyle(lines);
+        if (!F3PlusConfig.get().enabled) {
+            return;
+        }
+        DebugTextStyle.restyle(lines, MinecraftClient.getInstance().textRenderer, context.getScaledWindowWidth() - 6);
     }
 
     @Redirect(
@@ -27,7 +32,14 @@ public abstract class DebugHudMixin {
         at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;fill(IIIII)V")
     )
     private void f3plus$background(DrawContext context, int x1, int y1, int x2, int y2, int color) {
-        context.fill(x1, y1, x2, y2, 0x8C0D1116);
+        F3PlusConfig config = F3PlusConfig.get();
+        if (!config.enabled) {
+            context.fill(x1, y1, x2, y2, color);
+            return;
+        }
+        if (config.background) {
+            context.fill(x1, y1, x2, y2, 0x8C0D1116);
+        }
     }
 
     @Redirect(
@@ -38,6 +50,9 @@ public abstract class DebugHudMixin {
         )
     )
     private int f3plus$text(DrawContext context, TextRenderer renderer, String text, int x, int y, int color, boolean shadow) {
+        if (!F3PlusConfig.get().enabled) {
+            return context.drawText(renderer, text, x, y, color, shadow);
+        }
         return context.drawText(renderer, text, x, y, 0xFFFFFFFF, false);
     }
 }

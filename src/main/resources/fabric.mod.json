@@ -10,6 +10,11 @@
   ],
   "license": "MIT",
   "environment": "client",
+  "entrypoints": {
+    "client": [
+      "dev.coldwilder.f3plus.F3PlusClient"
+    ]
+  },
   "mixins": [
     {
       "config": "f3plus.mixins.json",

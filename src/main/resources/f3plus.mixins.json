@@ -4,7 +4,8 @@
   "package": "dev.coldwilder.f3plus.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "DebugHudMixin"
+    "DebugHudMixin",
+    "KeyboardMixin"
   ],
   "injectors": {
     "defaultRequire": 1
