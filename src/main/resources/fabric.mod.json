@@ -9,6 +9,11 @@
     "ColdWilder"
   ],
   "license": "MIT",
+  "contact": {
+    "homepage": "https://modrinth.com/mod/f3plus",
+    "sources": "https://github.com/v4488057-sys/f3plus",
+    "issues": "https://github.com/v4488057-sys/f3plus/issues"
+  },
   "environment": "client",
   "entrypoints": {
     "client": [
