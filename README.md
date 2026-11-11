@@ -14,7 +14,7 @@ I built it because BetterF3 was slowing my PC down. This is my own version, writ
 - the background is less opaque and the text has no shadow
 - very long lines are cut so they can't take over the screen
 
-Press F8 in game to open the settings. You can turn the mod off, hide the background, and choose which groups of lines to show: coordinates, chunks, entities, particles and system info. There is also a switch that hides mod lines. Settings are stored in `config/f3plus.json`.
+Press F8 in game to open the settings. You can turn the mod off, hide the background, and choose which groups of lines to show: coordinates, chunks, entities, particles and system info. Block tags are hidden by default but can be turned back on. There is also a switch that hides mod lines. Settings are stored in `config/f3plus.json`.
 
 ## Installing
 

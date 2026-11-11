@@ -22,6 +22,7 @@ public final class F3PlusConfig {
     public boolean showEntities = true;
     public boolean showParticles = true;
     public boolean showSystem = true;
+    public boolean showBlockTags = false;
 
     public F3PlusConfig() {
     }

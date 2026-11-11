@@ -20,7 +20,9 @@ public final class DebugTextStyle {
     private static final String[] MOD_JUNK = {
         "Sodium",
         "[Sodium",
-        "TS (No",
+        "TS (",
+        "TrN=",
+        "TrS=",
         "N=",
         "SHR=",
         "NL=",
@@ -182,6 +184,9 @@ public final class DebugTextStyle {
             return true;
         }
         if (!config.showParticles && matches(text, PARTICLES)) {
+            return true;
+        }
+        if (!config.showBlockTags && text.startsWith("#")) {
             return true;
         }
         return !config.showSystem && matches(text, SYSTEM);

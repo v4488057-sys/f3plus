@@ -38,7 +38,7 @@ public abstract class DebugHudMixin {
             return;
         }
         if (config.background) {
-            context.fill(x1, y1, x2, y2, 0x8C0D1116);
+            context.fill(x1, y1, x2, y2, 0xE60D1116);
         }
     }
 

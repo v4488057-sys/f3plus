@@ -20,7 +20,7 @@ public final class F3PlusConfigScreen extends Screen {
         F3PlusConfig config = F3PlusConfig.get();
         int left = this.width / 2 - WIDTH - 2;
         int right = this.width / 2 + 2;
-        int top = this.height / 2 - 50;
+        int top = this.height / 2 - 62;
 
         this.addDrawableChild(CyclingButtonWidget.onOffBuilder(config.enabled)
             .build(left, top, WIDTH, HEIGHT, Text.literal("Mod"), (button, value) -> {
@@ -63,9 +63,14 @@ public final class F3PlusConfigScreen extends Screen {
                 config.showSystem = value;
                 config.save();
             }));
+        this.addDrawableChild(CyclingButtonWidget.onOffBuilder(config.showBlockTags)
+            .build(left, top + STEP * 4, WIDTH, HEIGHT, Text.literal("Block tags"), (button, value) -> {
+                config.showBlockTags = value;
+                config.save();
+            }));
 
         this.addDrawableChild(ButtonWidget.builder(Text.literal("Done"), button -> this.close())
-            .dimensions(this.width / 2 - 100, top + STEP * 4 + 8, 200, HEIGHT)
+            .dimensions(this.width / 2 - 100, top + STEP * 5 + 8, 200, HEIGHT)
             .build());
     }
 
