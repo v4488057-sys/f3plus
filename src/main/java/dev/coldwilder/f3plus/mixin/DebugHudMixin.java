@@ -20,41 +20,11 @@ public abstract class DebugHudMixin {
         method = "drawText(Lnet/minecraft/client/gui/DrawContext;Ljava/util/List;Z)V",
         at = @At("HEAD")
     )
-    private void f3plus$layout(DrawContext context, List<String> lines, boolean left, CallbackInfo ci) {
-        F3PlusConfig config = F3PlusConfig.get();
-        if (!config.enabled) {
+    private void f3plus$restyle(DrawContext context, List<String> lines, boolean left, CallbackInfo ci) {
+        if (!F3PlusConfig.get().enabled) {
             return;
         }
-
-        TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
-        int scaledWidth = context.getScaledWindowWidth();
-        DebugTextStyle.restyle(lines, renderer, scaledWidth - 6);
-
-        if (!config.background || lines.isEmpty()) {
-            return;
-        }
-
-        int width = 0;
-        int last = -1;
-        for (int i = 0; i < lines.size(); i++) {
-            String line = lines.get(i);
-            if (line.isEmpty()) {
-                continue;
-            }
-            width = Math.max(width, renderer.getWidth(line));
-            last = i;
-        }
-        if (last < 0 || width <= 0) {
-            return;
-        }
-
-        int top = 1;
-        int bottom = Math.min(context.getScaledWindowHeight(), 10 + 9 * last);
-        int x1 = left ? 1 : Math.max(0, scaledWidth - 3 - width);
-        int x2 = left ? Math.min(scaledWidth, width + 3) : scaledWidth - 1;
-        if (x1 < x2 && top < bottom) {
-            context.fill(x1, top, x2, bottom, 0xE60D1116);
-        }
+        DebugTextStyle.restyle(lines, MinecraftClient.getInstance().textRenderer, context.getScaledWindowWidth() - 6);
     }
 
     @Redirect(
@@ -62,8 +32,13 @@ public abstract class DebugHudMixin {
         at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;fill(IIIII)V")
     )
     private void f3plus$background(DrawContext context, int x1, int y1, int x2, int y2, int color) {
-        if (!F3PlusConfig.get().enabled) {
+        F3PlusConfig config = F3PlusConfig.get();
+        if (!config.enabled) {
             context.fill(x1, y1, x2, y2, color);
+            return;
+        }
+        if (config.background) {
+            context.fill(x1, y1, x2, y2, 0xE60D1116);
         }
     }
 
