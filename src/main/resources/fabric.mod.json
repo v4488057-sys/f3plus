@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "f3plus",
+  "version": "${version}",
+  "name": "F3 Plus",
+  "icon": "assets/f3plus/icon.png",
+  "description": "Makes the F3 debug screen easier to read: colored values, mod spam hidden, lighter background.",
+  "authors": [
+    "ColdWilder"
+  ],
+  "license": "MIT",
+  "environment": "client",
+  "mixins": [
+    {
+      "config": "f3plus.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": ">=1.21 <1.21.2"
+  }
+}
