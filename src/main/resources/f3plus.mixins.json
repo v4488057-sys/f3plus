@@ -5,7 +5,9 @@
   "compatibilityLevel": "JAVA_21",
   "client": [
     "DebugHudMixin",
-    "KeyboardMixin"
+    "GameOptionsAccessor",
+    "GameOptionsMixin",
+    "MinecraftClientMixin"
   ],
   "injectors": {
     "defaultRequire": 1

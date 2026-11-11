@@ -4,7 +4,7 @@
   "version": "${version}",
   "name": "F3 Plus",
   "icon": "assets/f3plus/icon.png",
-  "description": "Makes the F3 debug screen easier to read: colored values, mod spam hidden, lighter background.",
+  "description": "Makes the F3 debug screen easier to read: colored values and mod spam hidden.",
   "authors": [
     "ColdWilder"
   ],
@@ -13,7 +13,13 @@
   "entrypoints": {
     "client": [
       "dev.coldwilder.f3plus.F3PlusClient"
+    ],
+    "modmenu": [
+      "dev.coldwilder.f3plus.F3PlusModMenu"
     ]
+  },
+  "suggests": {
+    "modmenu": ">=11.0.0"
   },
   "mixins": [
     {

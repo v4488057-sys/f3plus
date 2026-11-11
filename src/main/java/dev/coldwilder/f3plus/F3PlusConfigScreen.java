@@ -11,8 +11,20 @@ public final class F3PlusConfigScreen extends Screen {
     private static final int HEIGHT = 20;
     private static final int STEP = 24;
 
+    private final Screen parent;
+
     public F3PlusConfigScreen() {
+        this(null);
+    }
+
+    public F3PlusConfigScreen(Screen parent) {
         super(Text.literal("F3 Plus"));
+        this.parent = parent;
+    }
+
+    @Override
+    public void close() {
+        this.client.setScreen(this.parent);
     }
 
     @Override
@@ -78,5 +90,7 @@ public final class F3PlusConfigScreen extends Screen {
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
         context.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 24, 0xFFFFFF);
+        Text key = Text.literal("Key: ").append(F3PlusKeybinds.binding().getBoundKeyLocalizedText());
+        context.drawCenteredTextWithShadow(this.textRenderer, key, this.width / 2, 36, 0xA0A0A0);
     }
 }

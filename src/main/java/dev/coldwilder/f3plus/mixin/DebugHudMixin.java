@@ -33,13 +33,10 @@ public abstract class DebugHudMixin {
     )
     private void f3plus$background(DrawContext context, int x1, int y1, int x2, int y2, int color) {
         F3PlusConfig config = F3PlusConfig.get();
-        if (!config.enabled) {
-            context.fill(x1, y1, x2, y2, color);
+        if (config.enabled && !config.background) {
             return;
         }
-        if (config.background) {
-            context.fill(x1, y1, x2, y2, 0xE60D1116);
-        }
+        context.fill(x1, y1, x2, y2, color);
     }
 
     @Redirect(
